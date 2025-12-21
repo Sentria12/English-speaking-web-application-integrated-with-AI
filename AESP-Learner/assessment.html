@@ -1,34 +1,9 @@
-<!DOCTYPE html>
-<html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Đánh giá đầu vào</title>
-    <link rel="stylesheet" href="css/styles.css" />
-  </head>
-  <body>
-    <header class="header">
-      <h1>AESP</h1>
-      <div>
-        <a href="dashboard.html">🏠Trang chủ</a>
-        <button class="btn-logout" onclick="logout()">Đăng xuất</button>
-      </div>
-    </header>
-    <section id="assessment" class="card">
-      <h2>Đánh Giá Trình Độ Ban Đầu</h2>
-      <div class="prompt-box">
+<div class="card">
+    <h2>Đánh Giá Trình Độ Ban Đầu</h2>
+    <div class="prompt-box">
         <p>Hãy nói rõ ràng câu sau vào micro:</p>
-        <p class="prompt-text">
-          Please introduce yourself and tell me about your hobbies.
-        </p>
-      </div>
-
-      <button id="start-assessment" class="btn-primary">
-        🎤 Bắt đầu ghi âm
-      </button>
-
-      <div id="assessment-feedback" class="feedback-box"></div>
-    </section>
-
-    <script src="script.js"></script>
-  </body>
-</html>
+        <p class="prompt-text">Please introduce yourself and tell me about your hobbies.</p>
+    </div>
+    <button id="start-assessment" class="btn-primary"><i class="fas fa-microphone"></i> Bắt đầu ghi âm</button>
+    <div id="assessment-feedback" class="feedback-box hidden"></div>
+</div>
