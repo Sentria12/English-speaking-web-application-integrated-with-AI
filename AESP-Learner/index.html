@@ -1,71 +1,66 @@
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AESP - Đăng nhập</title>
-    <link rel="stylesheet" href="css/styles.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AESP - Luyện Nói Tiếng Anh Với AI</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
     <div class="container">
-      </header>
-      <section id="auth-section" class="card">
-        <h2 id="auth-title">Chào mừng đến AESP</h2>
-        <p class="subtitle">Luyện nói tiếng Anh tự tin với AI</p>
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-microphone-alt"></i>
+                <h1>AESP</h1>
+            </div>
+            <div class="header-actions">
+                <a href="auth.html" class="btn-outline">Đăng nhập</a>
+                <a href="auth.html#register" class="btn-primary-header">Đăng ký miễn phí</a>
+            </div>
+        </header>
 
-        <div class="auth-toggle">
-          <button id="login-tab" class="tab-active">Đăng nhập</button>
-          <button id="register-tab">Đăng ký</button>
-        </div>
+        <section class="hero-section">
+            <h1 class="hero-title">Luyện Nói Tiếng Anh Tự Tin <br><span class="highlight">Không Sợ Sai</span></h1>
+            <p class="hero-subtitle">Hàng ngàn người Việt đã cải thiện phát âm và lưu loát chỉ sau 30 ngày với AI thông minh của AESP</p>
+            <div class="hero-buttons">
+                <a href="auth.html#register" class="btn-primary-large">Bắt đầu ngay miễn phí</a>
+            </div>
+        </section>
 
-        <form id="login-form" class="auth-form">
-          <input
-            id="login-username"
-            type="text"
-            placeholder="Tên đăng nhập"
-            required
-          />
-          <input
-            id="login-password"
-            type="password"
-            placeholder="Mật khẩu"
-            required
-          />
-          <button type="submit" class="btn-primary">Đăng nhập</button>
-          <p id="auth-error" class="error"></p>
-        </form>
-
-        <form id="register-form" class="auth-form hidden">
-          <input
-            id="reg-username"
-            type="text"
-            placeholder="Tên đăng nhập"
-            required
-          />
-          <input id="reg-email" type="email" placeholder="Email" required />
-          <input
-            id="reg-password"
-            type="password"
-            placeholder="Mật khẩu"
-            required
-          />
-          <input
-            id="reg-confirm"
-            type="password"
-            placeholder="Xác nhận mật khẩu"
-            required
-          />
-          <button type="submit" class="btn-primary">Đăng ký ngay</button>
-        </form>
-      </section>
+        <section class="features-section">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon-circle">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>AI Thông Minh</h3>
+                    <p>Sửa phát âm, ngữ pháp ngay lập tức như giáo viên bản xứ</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon-circle">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>Luyện Mọi Lúc</h3>
+                    <p>Thực hành với hàng trăm tình huống thực tế</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon-circle">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Theo Dõi Tiến Bộ</h3>
+                    <p>Báo cáo chi tiết, streak, bảng xếp hạng</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon-circle">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3>Học Với Mentor</h3>
+                    <p>Gói Premium: hướng dẫn 1-1 từ chuyên gia</p>
+                </div>
+            </div>
+        </section>
     </div>
-
-    <script src="script.js"></script>
-  </body>
+</body>
 </html>
