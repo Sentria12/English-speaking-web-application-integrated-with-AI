@@ -1,0 +1,24 @@
+<div class="card">
+    <h2>Luyện Nói Với AI</h2>
+    <div class="topic-selector">
+        <select id="topic-select">
+            <option value="">Chọn chủ đề</option>
+            <option value="daily">Cuộc sống hàng ngày</option>
+            <option value="travel">Du lịch</option>
+            <option value="business">Kinh doanh</option>
+            <option value="healthcare">Y tế</option>
+        </select>
+        <button id="start-practice" class="btn-primary">Bắt đầu</button>
+    </div>
+
+    <div id="practice-area" class="practice-chat hidden">
+        <div id="conversation" class="chat-messages"></div>
+        <div class="chat-input">
+            <button id="speak-btn" class="btn-speak"><i class="fas fa-microphone"></i> Nói ngay</button>
+        </div>
+        <div id="suggestions" class="suggestions-box hidden">
+            <h4>Gợi ý từ AI:</h4>
+            <ul id="suggestion-list"></ul>
+        </div>
+    </div>
+</div>
