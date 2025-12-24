@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AESP - Assessments</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar (same as index.html) -->
+        <nav class="sidebar" id="sidebar">
+            <div class="logo">
+                <h2><i class="fas fa-comments"></i> AESP Mentor</h2>
+                <p class="role-tag">Mentor Portal</p>
+            </div>
+            
+            <div class="user-info">
+                <div class="avatar">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="user-details">
+                    <h4 id="mentorName">Loading...</h4>
+                    <p><i class="fas fa-circle status-active"></i> Online</p>
+                </div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="learner-management.html">
+                        <i class="fas fa-users"></i>
+                        <span>Learner Management</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="assessments.html">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Assessments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="feedback.html">
+                        <i class="fas fa-comment-dots"></i>
+                        <span>Feedback</span>
+                        <span class="notification-badge">0</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="materials.html">
+                        <i class="fas fa-book-open"></i>
+                        <span>Teaching Materials</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <p>© 2024 AESP Platform</p>
+                <p>v1.0.0</p>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Top Header -->
+            <header class="top-header">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="header-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search assessments..." id="searchAssessments">
+                </div>
+                
+                <div class="header-actions">
+                    <button class="btn-icon" id="notificationsBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">0</span>
+                    </button>
+                    <button class="btn-icon" id="helpBtn">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Assessments Content -->
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h1>Learner Assessments</h1>
+                    <p>Organize and evaluate learner proficiency levels</p>
+                    <button class="btn btn-primary" id="createAssessmentBtn">
+                        <i class="fas fa-plus-circle"></i> Create New Assessment
+                    </button>
+                </div>
+                
+                <!-- Assessment Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #fff3e0;">
+                            <i class="fas fa-clock" style="color: #ff9800;"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="pendingAssessments">0</h3>
+                            <p>Pending Review</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #e8f5e9;">
+                            <i class="fas fa-check-circle" style="color: #4caf50;"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="completedAssessments">0</h3>
+                            <p>Completed</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #e3f2fd;">
+                            <i class="fas fa-user-clock" style="color: #2196f3;"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="scheduledAssessments">0</h3>
+                            <p>Scheduled</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #fce4ec;">
+                            <i class="fas fa-exclamation-circle" style="color: #e91e63;"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="overdueAssessments">0</h3>
+                            <p>Overdue</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Assessment Tabs -->
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="pending">Pending Review</button>
+                    <button class="tab-btn" data-tab="scheduled">Scheduled</button>
+                    <button class="tab-btn" data-tab="completed">Completed</button>
+                    <button class="tab-btn" data-tab="templates">Templates</button>
+                </div>
+                
+                <!-- Pending Assessments -->
+                <div class="tab-content active" id="pendingTab">
+                    <div class="section">
+                        <div class="section-header">
+                            <h2>Assessments Pending Review</h2>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Learner</th>
+                                        <th>Assessment Date</th>
+                                        <th>Type</th>
+                                        <th>Duration</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pendingAssessmentsTable">
+                                    <!-- Pending assessments will be loaded here -->
+                                    <tr class="empty-row">
+                                        <td colspan="6">No pending assessments</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Assessment Criteria -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Assessment Criteria</h2>
+                    </div>
+                    <div class="criteria-grid">
+                        <div class="criterion-card">
+                            <h3><i class="fas fa-volume-up"></i> Pronunciation</h3>
+                            <ul>
+                                <li>Clarity of speech</li>
+                                <li>Word stress</li>
+                                <li>Intonation patterns</li>
+                                <li>Accent comprehensibility</li>
+                            </ul>
+                            <div class="rating-scale">
+                                <span>1 (Needs Work)</span>
+                                <span>5 (Excellent)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="criterion-card">
+                            <h3><i class="fas fa-language"></i> Grammar</h3>
+                            <ul>
+                                <li>Sentence structure</li>
+                                <li>Tense usage</li>
+                                <li>Article usage</li>
+                                <li>Preposition accuracy</li>
+                            </ul>
+                            <div class="rating-scale">
+                                <span>1 (Needs Work)</span>
+                                <span>5 (Excellent)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="criterion-card">
+                            <h3><i class="fas fa-comments"></i> Fluency</h3>
+                            <ul>
+                                <li>Speaking rate</li>
+                                <li>Hesitation frequency</li>
+                                <li>Flow of ideas</li>
+                                <li>Response time</li>
+                            </ul>
+                            <div class="rating-scale">
+                                <span>1 (Needs Work)</span>
+                                <span>5 (Excellent)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="criterion-card">
+                            <h3><i class="fas fa-book"></i> Vocabulary</h3>
+                            <ul>
+                                <li>Word range</li>
+                                <li>Appropriateness</li>
+                                <li>Idiomatic expressions</li>
+                                <li>Collocations</li>
+                            </ul>
+                            <div class="rating-scale">
+                                <span>1 (Needs Work)</span>
+                                <span>5 (Excellent)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Assessment Templates -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Assessment Templates</h2>
+                        <button class="btn btn-outline" id="createTemplateBtn">
+                            <i class="fas fa-file-alt"></i> Create Template
+                        </button>
+                    </div>
+                    <div class="templates-grid">
+                        <div class="template-card">
+                            <h3>Initial Placement</h3>
+                            <p>Basic assessment for new learners</p>
+                            <div class="template-stats">
+                                <span><i class="fas fa-clock"></i> 15-20 min</span>
+                                <span><i class="fas fa-question"></i> 5 sections</span>
+                            </div>
+                            <button class="btn btn-sm btn-outline">Use Template</button>
+                        </div>
+                        
+                        <div class="template-card">
+                            <h3>Progress Check</h3>
+                            <p>Monthly progress evaluation</p>
+                            <div class="template-stats">
+                                <span><i class="fas fa-clock"></i> 10-15 min</span>
+                                <span><i class="fas fa-question"></i> 3 sections</span>
+                            </div>
+                            <button class="btn btn-sm btn-outline">Use Template</button>
+                        </div>
+                        
+                        <div class="template-card">
+                            <h3>Business English</h3>
+                            <p>Professional communication assessment</p>
+                            <div class="template-stats">
+                                <span><i class="fas fa-clock"></i> 20-25 min</span>
+                                <span><i class="fas fa-question"></i> 4 sections</span>
+                            </div>
+                            <button class="btn btn-sm btn-outline">Use Template</button>
+                        </div>
+                        
+                        <div class="template-card">
+                            <h3>Pronunciation Focus</h3>
+                            <p>Detailed pronunciation evaluation</p>
+                            <div class="template-stats">
+                                <span><i class="fas fa-clock"></i> 15 min</span>
+                                <span><i class="fas fa-question"></i> 2 sections</span>
+                            </div>
+                            <button class="btn btn-sm btn-outline">Use Template</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for Creating Assessment -->
+    <div class="modal" id="createAssessmentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Assessment</h3>
+                <button class="modal-close" id="closeAssessmentModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createAssessmentForm">
+                    <div class="form-group">
+                        <label for="assessmentLearner">Select Learner</label>
+                        <select id="assessmentLearner" required>
+                            <option value="">Choose learner</option>
+                            <!-- Learners will be populated here -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="assessmentType">Assessment Type</label>
+                        <select id="assessmentType" required>
+                            <option value="">Select type</option>
+                            <option value="placement">Initial Placement</option>
+                            <option value="progress">Progress Check</option>
+                            <option value="pronunciation">Pronunciation Focus</option>
+                            <option value="business">Business English</option>
+                            <option value="custom">Custom Assessment</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="assessmentDate">Scheduled Date & Time</label>
+                        <input type="datetime-local" id="assessmentDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="assessmentNotes">Notes (Optional)</label>
+                        <textarea id="assessmentNotes" placeholder="Add any specific instructions or focus areas..." rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelAssessment">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Schedule Assessment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+</body>
+</html>
