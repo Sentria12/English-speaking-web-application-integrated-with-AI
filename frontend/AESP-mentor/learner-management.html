@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AESP - Learner Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar (same as index.html) -->
+        <nav class="sidebar" id="sidebar">
+            <div class="logo">
+                <h2><i class="fas fa-comments"></i> AESP Mentor</h2>
+                <p class="role-tag">Mentor Portal</p>
+            </div>
+            
+            <div class="user-info">
+                <div class="avatar">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="user-details">
+                    <h4 id="mentorName">Loading...</h4>
+                    <p><i class="fas fa-circle status-active"></i> Online</p>
+                </div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="learner-management.html">
+                        <i class="fas fa-users"></i>
+                        <span>Learner Management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="assessments.html">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Assessments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="feedback.html">
+                        <i class="fas fa-comment-dots"></i>
+                        <span>Feedback</span>
+                        <span class="notification-badge">0</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="materials.html">
+                        <i class="fas fa-book-open"></i>
+                        <span>Teaching Materials</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <p>© 2024 AESP Platform</p>
+                <p>v1.0.0</p>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Top Header -->
+            <header class="top-header">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="header-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search learners..." id="searchLearners">
+                </div>
+                
+                <div class="header-actions">
+                    <button class="btn-icon" id="notificationsBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">0</span>
+                    </button>
+                    <button class="btn-icon" id="helpBtn">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Learner Management Content -->
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h1>Learner Management</h1>
+                    <p>Manage and monitor your assigned learners</p>
+                    <button class="btn btn-primary" id="addLearnerBtn">
+                        <i class="fas fa-user-plus"></i> Assign New Learner
+                    </button>
+                </div>
+                
+                <!-- Filters -->
+                <div class="filters-section">
+                    <div class="filter-group">
+                        <label for="levelFilter">Level:</label>
+                        <select id="levelFilter" class="filter-select">
+                            <option value="all">All Levels</option>
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="statusFilter">Status:</label>
+                        <select id="statusFilter" class="filter-select">
+                            <option value="all">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="assessment">Needs Assessment</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="sortBy">Sort by:</label>
+                        <select id="sortBy" class="filter-select">
+                            <option value="name">Name</option>
+                            <option value="level">Level</option>
+                            <option value="lastSession">Last Session</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-secondary" id="applyFilters">
+                        <i class="fas fa-filter"></i> Apply Filters
+                    </button>
+                </div>
+                
+                <!-- Learners Table -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Assigned Learners</h2>
+                        <div class="section-actions">
+                            <button class="btn btn-outline" id="exportLearners">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Learner Name</th>
+                                    <th>Level</th>
+                                    <th>Last Session</th>
+                                    <th>Progress</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="learnersTable">
+                                <!-- Learners will be loaded here -->
+                                <tr class="empty-row">
+                                    <td colspan="6">No learners assigned yet</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="pagination">
+                        <button class="page-btn" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span class="page-info">Page 1 of 1</span>
+                        <button class="page-btn" disabled>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Learner Leveling Guide -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Leveling Guidelines</h2>
+                    </div>
+                    <div class="guidelines">
+                        <div class="guideline-card">
+                            <h3><span class="level-badge beginner">Beginner</span></h3>
+                            <ul>
+                                <li>Basic vocabulary and simple sentences</li>
+                                <li>Frequent pronunciation errors</li>
+                                <li>Needs help with basic grammar</li>
+                                <li>Limited conversational ability</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="guideline-card">
+                            <h3><span class="level-badge intermediate">Intermediate</span></h3>
+                            <ul>
+                                <li>Can handle daily conversations</li>
+                                <li>Some pronunciation issues</li>
+                                <li>Understands basic grammar rules</li>
+                                <li>Needs practice with fluency</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="guideline-card">
+                            <h3><span class="level-badge advanced">Advanced</span></h3>
+                            <ul>
+                                <li>Fluent in most situations</li>
+                                <li>Minor pronunciation refinements needed</li>
+                                <li>Focus on idiomatic expressions</li>
+                                <li>Professional/business English</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for Assigning Learner -->
+    <div class="modal" id="assignLearnerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Assign New Learner</h3>
+                <button class="modal-close" id="closeAssignModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="assignLearnerForm">
+                    <div class="form-group">
+                        <label for="learnerEmail">Learner Email</label>
+                        <input type="email" id="learnerEmail" placeholder="learner@email.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="initialLevel">Initial Level Assessment</label>
+                        <select id="initialLevel" required>
+                            <option value="">Select level</option>
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="learningGoals">Learning Goals</label>
+                        <textarea id="learningGoals" placeholder="Enter learner's specific goals..." rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelAssign">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Assign Learner</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

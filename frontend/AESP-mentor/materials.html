@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AESP - Teaching Materials</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar (same as index.html) -->
+        <nav class="sidebar" id="sidebar">
+            <div class="logo">
+                <h2><i class="fas fa-comments"></i> AESP Mentor</h2>
+                <p class="role-tag">Mentor Portal</p>
+            </div>
+            
+            <div class="user-info">
+                <div class="avatar">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="user-details">
+                    <h4 id="mentorName">Loading...</h4>
+                    <p><i class="fas fa-circle status-active"></i> Online</p>
+                </div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="learner-management.html">
+                        <i class="fas fa-users"></i>
+                        <span>Learner Management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="assessments.html">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Assessments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="feedback.html">
+                        <i class="fas fa-comment-dots"></i>
+                        <span>Feedback</span>
+                        <span class="notification-badge">0</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="materials.html">
+                        <i class="fas fa-book-open"></i>
+                        <span>Teaching Materials</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <p>© 2024 AESP Platform</p>
+                <p>v1.0.0</p>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Top Header -->
+            <header class="top-header">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="header-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search materials..." id="searchMaterials">
+                </div>
+                
+                <div class="header-actions">
+                    <button class="btn-icon" id="notificationsBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">0</span>
+                    </button>
+                    <button class="btn-icon" id="helpBtn">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Materials Content -->
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h1>Teaching Materials</h1>
+                    <p>Share relevant documents and resources with learners</p>
+                    <button class="btn btn-primary" id="uploadMaterialBtn">
+                        <i class="fas fa-cloud-upload-alt"></i> Upload New Material
+                    </button>
+                </div>
+                
+                <!-- Upload Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #e3f2fd;">
+                            <i class="fas fa-file-alt" style="color: #2196f3;"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalMaterials">0</h3>
+                            <p>Total Materials</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #e8f5e9;">
+                            <i class="fas fa-download" style="color: #4caf50;"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalDownloads">0</h3>
+                            <p>Total Downloads</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #fff3e0;">
+                            <i class="fas fa-folder-open" style="color: #ff9800;"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="sharedFolders">0</h3>
+                            <p>Shared Folders</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #f3e5f5;">
+                            <i class="fas fa-users" style="color: #9c27b0;"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="sharedWith">0</h3>
+                            <p>Learners Shared With</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Materials Tabs -->
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="all">All Materials</button>
+                    <button class="tab-btn" data-tab="documents">Documents</button>
+                    <button class="tab-btn" data-tab="audio">Audio Files</button>
+                    <button class="tab-btn" data-tab="videos">Videos</button>
+                    <button class="tab-btn" data-tab="links">Web Links</button>
+                </div>
+                
+                <!-- All Materials -->
+                <div class="tab-content active" id="allTab">
+                    <div class="section">
+                        <div class="section-header">
+                            <h2>All Teaching Materials</h2>
+                            <div class="section-actions">
+                                <button class="btn btn-outline" id="createFolderBtn">
+                                    <i class="fas fa-folder-plus"></i> Create Folder
+                                </button>
+                                <button class="btn btn-outline" id="bulkShareBtn">
+                                    <i class="fas fa-share-alt"></i> Bulk Share
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Materials Grid View -->
+                        <div class="materials-grid">
+                            <!-- Materials will be loaded here -->
+                            <div class="empty-state">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <h3>No Materials Uploaded Yet</h3>
+                                <p>Upload your first teaching material to share with learners</p>
+                                <button class="btn btn-primary" id="firstUploadBtn">
+                                    <i class="fas fa-upload"></i> Upload First Material
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Material Categories -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Material Categories</h2>
+                    </div>
+                    <div class="categories-grid">
+                        <div class="category-card">
+                            <div class="category-icon">
+                                <i class="fas fa-volume-up"></i>
+                            </div>
+                            <h3>Pronunciation</h3>
+                            <p>Audio exercises, phonetic guides, tongue twisters</p>
+                            <span class="category-count">0 files</span>
+                        </div>
+                        
+                        <div class="category-card">
+                            <div class="category-icon">
+                                <i class="fas fa-language"></i>
+                            </div>
+                            <h3>Grammar</h3>
+                            <p>Rules, exercises, worksheets, cheat sheets</p>
+                            <span class="category-count">0 files</span>
+                        </div>
+                        
+                        <div class="category-card">
+                            <div class="category-icon">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <h3>Conversation</h3>
+                            <p>Dialogue scripts, role-play scenarios, Q&A</p>
+                            <span class="category-count">0 files</span>
+                        </div>
+                        
+                        <div class="category-card">
+                            <div class="category-icon">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <h3>Business English</h3>
+                            <p>Meetings, presentations, emails, negotiations</p>
+                            <span class="category-count">0 files</span>
+                        </div>
+                        
+                        <div class="category-card">
+                            <div class="category-icon">
+                                <i class="fas fa-plane"></i>
+                            </div>
+                            <h3>Travel English</h3>
+                            <p>Airport, hotel, restaurant, directions</p>
+                            <span class="category-count">0 files</span>
+                        </div>
+                        
+                        <div class="category-card">
+                            <div class="category-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <h3>Vocabulary</h3>
+                            <p>Word lists, flashcards, collocations, idioms</p>
+                            <span class="category-count">0 files</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sharing Guidelines -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Sharing Guidelines</h2>
+                    </div>
+                    <div class="guidelines">
+                        <div class="guideline-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Provide relevant documents when learners need them</h4>
+                                <p>Share materials based on learner's current level and specific needs</p>
+                            </div>
+                        </div>
+                        <div class="guideline-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Organize materials by topic and difficulty</h4>
+                                <p>Create folders for different topics and proficiency levels</p>
+                            </div>
+                        </div>
+                        <div class="guideline-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Include practical, real-life examples</h4>
+                                <p>Focus on materials that learners can immediately apply</p>
+                            </div>
+                        </div>
+                        <div class="guideline-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Suggest ways to learn vocabulary, collocations, and idioms</h4>
+                                <p>Provide strategies and resources for vocabulary building</p>
+                            </div>
+                        </div>
+                        <div class="guideline-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Share communication experiences with native speakers</h4>
+                                <p>Include tips and insights from real conversations</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for Uploading Material -->
+    <div class="modal" id="uploadMaterialModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Upload Teaching Material</h3>
+                <button class="modal-close" id="closeUploadModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="uploadMaterialForm">
+                    <div class="upload-area" id="dropArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <h4>Drag & Drop Files Here</h4>
+                        <p>or click to browse</p>
+                        <input type="file" id="fileInput" multiple style="display: none;">
+                        <button type="button" class="btn btn-outline" id="browseFilesBtn">Browse Files</button>
+                        <p class="upload-hint">Supports: PDF, DOC, PPT, MP3, MP4, Images (Max 50MB each)</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="materialTitle">Material Title</label>
+                        <input type="text" id="materialTitle" placeholder="Enter descriptive title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="materialDescription">Description</label>
+                        <textarea id="materialDescription" placeholder="Brief description of the material..." rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="materialCategory">Category</label>
+                        <select id="materialCategory" required>
+                            <option value="">Select category</option>
+                            <option value="pronunciation">Pronunciation</option>
+                            <option value="grammar">Grammar</option>
+                            <option value="vocabulary">Vocabulary</option>
+                            <option value="conversation">Conversation</option>
+                            <option value="business">Business English</option>
+                            <option value="travel">Travel English</option>
+                            <option value="listening">Listening</option>
+                            <option value="writing">Writing</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="materialLevel">Target Level</label>
+                        <select id="materialLevel">
+                            <option value="all">All Levels</option>
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Share With</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox">
+                                <input type="checkbox" id="shareAllLearners">
+                                <span>All My Learners</span>
+                            </label>
+                            <p class="form-hint">Or select specific learners after uploading</p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelUpload">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Upload Material</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+</body>
+</html>

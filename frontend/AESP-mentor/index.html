@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AESP - Mentor Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar" id="sidebar">
+            <div class="logo">
+                <h2><i class="fas fa-comments"></i> AESP Mentor</h2>
+                <p class="role-tag">Mentor Portal</p>
+            </div>
+            
+            <div class="user-info">
+                <div class="avatar">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="user-details">
+                    <h4 id="mentorName">Loading...</h4>
+                    <p><i class="fas fa-circle status-active"></i> Online</p>
+                </div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item active">
+                    <a href="index.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="learner-management.html">
+                        <i class="fas fa-users"></i>
+                        <span>Learner Management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="assessments.html">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>Assessments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="feedback.html">
+                        <i class="fas fa-comment-dots"></i>
+                        <span>Feedback</span>
+                        <span class="notification-badge">0</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="materials.html">
+                        <i class="fas fa-book-open"></i>
+                        <span>Teaching Materials</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <p>© 2024 AESP Platform</p>
+                <p>v1.0.0</p>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Top Header -->
+            <header class="top-header">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="header-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search learners, sessions..." id="searchInput">
+                </div>
+                
+                <div class="header-actions">
+                    <button class="btn-icon" id="notificationsBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">0</span>
+                    </button>
+                    <button class="btn-icon" id="helpBtn">
+                        <i class="fas fa-question-circle"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="content-wrapper">
+                <div class="page-header">
+                    <h1>Mentor Dashboard</h1>
+                    <p>Welcome back! Here's your teaching overview.</p>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #e3f2fd;">
+                            <i class="fas fa-users" style="color: #2196f3;"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalLearners">0</h3>
+                            <p>Total Learners</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #e8f5e9;">
+                            <i class="fas fa-clipboard-check" style="color: #4caf50;"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="pendingAssessments">0</h3>
+                            <p>Pending Assessments</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #fff3e0;">
+                            <i class="fas fa-comments" style="color: #ff9800;"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="sessionsToday">0</h3>
+                            <p>Sessions Today</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: #f3e5f5;">
+                            <i class="fas fa-star" style="color: #9c27b0;"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="avgRating">0.0</h3>
+                            <p>Average Rating</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Quick Actions</h2>
+                    </div>
+                    <div class="actions-grid">
+                        <a href="assessments.html" class="action-card">
+                            <i class="fas fa-clipboard-list"></i>
+                            <h3>Organize Assessment</h3>
+                            <p>Create and manage learner assessments</p>
+                        </a>
+                        
+                        <a href="learner-management.html" class="action-card">
+                            <i class="fas fa-user-check"></i>
+                            <h3>Level Learners</h3>
+                            <p>Assign proficiency levels to learners</p>
+                        </a>
+                        
+                        <a href="feedback.html" class="action-card">
+                            <i class="fas fa-comment-medical"></i>
+                            <h3>Provide Feedback</h3>
+                            <p>Give immediate feedback after practice</p>
+                        </a>
+                        
+                        <a href="materials.html" class="action-card">
+                            <i class="fas fa-file-upload"></i>
+                            <h3>Upload Materials</h3>
+                            <p>Share documents and resources</p>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Upcoming Sessions -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Upcoming Sessions</h2>
+                        <a href="#" class="view-all">View All</a>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Learner</th>
+                                    <th>Time</th>
+                                    <th>Topic</th>
+                                    <th>Level</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="upcomingSessions">
+                                <!-- Sessions will be loaded here -->
+                                <tr class="empty-row">
+                                    <td colspan="5">No upcoming sessions scheduled</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Mentor Responsibilities -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Your Responsibilities</h2>
+                    </div>
+                    <div class="responsibilities">
+                        <div class="responsibility-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Organize assessment and leveling for learners</h4>
+                                <p>Evaluate learners' proficiency and assign appropriate levels</p>
+                            </div>
+                        </div>
+                        <div class="responsibility-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Provide relevant documents when needed</h4>
+                                <p>Share learning materials and resources</p>
+                            </div>
+                        </div>
+                        <div class="responsibility-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Point out pronunciation and grammar errors</h4>
+                                <p>Correct mistakes during practice sessions</p>
+                            </div>
+                        </div>
+                        <div class="responsibility-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Guide clear and confident expression</h4>
+                                <p>Help learners improve communication skills</p>
+                            </div>
+                        </div>
+                        <div class="responsibility-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Give immediate feedback after practice</h4>
+                                <p>Provide constructive feedback for quick improvement</p>
+                            </div>
+                        </div>
+                        <div class="responsibility-item">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Provide real-life conversation situations</h4>
+                                <p>Create authentic speaking scenarios</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/script.js"></script>
+</body>
+</html>
