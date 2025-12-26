@@ -66,7 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       /* LOGIC QUAN TRỌNG: 
          Khi mới login, ta lấy trạng thái từ máy. Nếu bạn muốn LUÔN hiện trang assessment 
-         mỗi khi login mới để test, hãy tạm thời sửa dòng dưới thành: 
+         mỗi khi login mới để test, tạm thời sửa dòng dưới thành: 
          setHasCompletedAssessment(false); 
       */
       const completed =
@@ -79,16 +79,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = () => {
-    // Xóa sạch localStorage để lần sau login menu ko tự hiện [cite: 2025-12-25]
-    localStorage.removeItem("aesp_logged_in");
+    // Xóa sạch localStorage để lần sau login menu ko tự hiện
     localStorage.removeItem("aesp_assessment_completed");
     setIsLoggedIn(false);
-    setHasCompletedAssessment(false); // Ép về false để ẩn menu dọc ngay lập tức [cite: 2025-12-25]
+    setHasCompletedAssessment(false); // Ép về false để ẩn menu dọc ngay lập tức
   };
 
   const completeAssessment = () => {
-    // Chỉ khi bấm "Hoàn tất" tại Assessment.tsx, menu mới được hiện [cite: 2025-12-25]
-    setHasCompletedAssessment(true);
+    // Chỉ khi bấm "Hoàn tất" tại Assessment.tsx, menu mới được hiện
     localStorage.setItem("aesp_assessment_completed", "true");
   };
 
