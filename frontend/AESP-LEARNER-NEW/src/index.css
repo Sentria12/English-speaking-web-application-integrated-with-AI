@@ -569,3 +569,106 @@ h2 {
     font-size: 2.8em;
   }
 }
+/* menu profile  */
+.profile-card-dropdown {
+  position: absolute;
+  right: 0;
+  top: 50px;
+  width: 240px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  padding: 20px;
+  z-index: 999;
+  color: #333;
+}
+
+/* Phần avatar và tên */
+.profile-info-header {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.avatar-large {
+  width: 65px;
+  height: 65px;
+  background: #dcdcdc;
+  border-radius: 50%;
+  margin: 0 auto 10px;
+}
+
+.profile-info-header h3 {
+  font-size: 1.1rem;
+  margin: 5px 0;
+  color: #1a1a1a;
+}
+
+.user-email {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.level-badge {
+  color: #5d5fef;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Các hàng chức năng */
+.dropdown-divider {
+  height: 1px;
+  background: #eee;
+  margin: 15px 0;
+}
+
+.dropdown-item {
+  width: 100%;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 5px;
+  font-size: 20px;
+  cursor: pointer;
+  color: blue;
+  text-align: left;
+}
+
+.icon-blue {
+  color: #5d5fef;
+}
+.logout-red {
+  color: #ff4d4f !important;
+  font-size: 20px;
+}
+
+.dropdown-item:hover {
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+.user-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.user-trigger:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.avatar-small {
+  width: 28px;
+  height: 28px;
+  background: #ccc;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
