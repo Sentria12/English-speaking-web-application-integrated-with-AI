@@ -1,0 +1,12 @@
+C:\Users\PC\Downloads\backend\backend\src\main\java\com\aesp\backend\BackendApplication.java
+C:\Users\PC\Downloads\backend\backend\src\main\java\com\aesp\backend\config\CorsConfig.java
+C:\Users\PC\Downloads\backend\backend\src\main\java\com\aesp\backend\controller\ConversationController.java
+C:\Users\PC\Downloads\backend\backend\src\main\java\com\aesp\backend\entity\EnglishLevel.java
+C:\Users\PC\Downloads\backend\backend\src\main\java\com\aesp\backend\entity\Learner.java
+C:\Users\PC\Downloads\backend\backend\src\main\java\com\aesp\backend\entity\Mentor.java
+C:\Users\PC\Downloads\backend\backend\src\main\java\com\aesp\backend\entity\PracticeSession.java
+C:\Users\PC\Downloads\backend\backend\src\main\java\com\aesp\backend\entity\User.java
+C:\Users\PC\Downloads\backend\backend\src\main\java\com\aesp\backend\model\PracticeResponse.java
+C:\Users\PC\Downloads\backend\backend\src\main\java\com\aesp\backend\repository\LearnerRepository.java
+C:\Users\PC\Downloads\backend\backend\src\main\java\com\aesp\backend\repository\PracticeSessionRepository.java
+C:\Users\PC\Downloads\backend\backend\src\main\java\com\aesp\backend\service\GeminiService.java

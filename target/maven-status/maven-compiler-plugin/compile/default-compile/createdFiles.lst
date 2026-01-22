@@ -1,0 +1,15 @@
+com\aesp\backend\entity\User$Status.class
+com\aesp\backend\repository\LearnerRepository.class
+com\aesp\backend\entity\EnglishLevel.class
+com\aesp\backend\BackendApplication.class
+com\aesp\backend\service\GeminiService.class
+com\aesp\backend\entity\Mentor.class
+com\aesp\backend\entity\PracticeSession$SessionType.class
+com\aesp\backend\repository\PracticeSessionRepository.class
+com\aesp\backend\entity\User.class
+com\aesp\backend\entity\User$Role.class
+com\aesp\backend\controller\ConversationController.class
+com\aesp\backend\entity\Learner.class
+com\aesp\backend\model\PracticeResponse.class
+com\aesp\backend\entity\PracticeSession.class
+com\aesp\backend\config\CorsConfig.class
