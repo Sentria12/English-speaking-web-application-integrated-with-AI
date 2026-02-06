@@ -25,16 +25,18 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(String email, String role) {
+    // Sửa lại hàm generateToken để nhận thêm Integer userId
+    public String generateToken(Integer userId, String email, String role) {
         String token = Jwts.builder()
                 .subject(email)
+                .claim("id", userId) // Bắt buộc thêm dòng này để Frontend có ID số
                 .claim("role", role)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigningKey())
                 .compact();
 
-        logger.info("Generated token for email: {}, role: {}", email, role);
+        logger.info("Generated token for UserID: {}, Email: {}", userId, email);
         return token;
     }
 
