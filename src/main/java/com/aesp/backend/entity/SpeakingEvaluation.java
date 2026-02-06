@@ -1,19 +1,27 @@
-package com.aesp.backend.repository;
+package com.aesp.backend.entity;
 
-import com.aesp.backend.entity.SpeakingEvaluation;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
-import java.util.List;
+import jakarta.persistence.*;
+import lombok.Data;
+import java.time.LocalDateTime;
 
-@Repository
-public interface SpeakingEvaluationRepository extends JpaRepository<SpeakingEvaluation, Long> {
+@Entity
+@Table(name = "speaking_evaluations")
+@Data
+public class SpeakingEvaluation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long evaluationId;
 
-    // Lấy danh sách đánh giá của một học viên để vẽ biểu đồ tiến độ
-    List<SpeakingEvaluation> findByLearnerIdOrderByCreatedAtDesc(Integer learnerId);
+    private Integer mentorId;
+    private Integer learnerId;
+    private Integer bookingId; // Liên kết với buổi đặt lịch cụ thể
 
-    // Tính điểm trung bình các kỹ năng của học viên
-    @Query("SELECT AVG(e.pronunciationScore), AVG(e.grammarScore), AVG(e.fluencyScore) " +
-            "FROM SpeakingEvaluation e WHERE e.learnerId = ?1")
-    List<Object[]> getAverageScoresByLearner(Integer learnerId);
+    private Double pronunciationScore; // Điểm phát âm
+    private Double grammarScore; // Điểm ngữ pháp
+    private Double fluencyScore; // Điểm lưu loát
+
+    @Column(columnDefinition = "TEXT")
+    private String feedbackDetails; // Chỉ ra lỗi sai cụ thể
+
+    private LocalDateTime createdAt = LocalDateTime.now();
 }
