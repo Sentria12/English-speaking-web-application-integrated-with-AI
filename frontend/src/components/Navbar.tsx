@@ -1,38 +1,45 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import NotificationBell from "./NotificationBell";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) =>
     setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
+  const handleClose = () => setAnchorEl(null);
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
   return (
-    <AppBar position="static" sx={{ boxShadow: 3 }}>
+    <AppBar
+      position="static"
+      sx={{
+        boxShadow: 3,
+        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        borderRadius: 10,
+        padding: "20px",
+        paddingTop: "10px",
+        marginTop: "10px",
+      }}
+    >
       <Toolbar sx={{ justifyContent: "space-between" }}>
-        {/* Logo */}
         <Typography
           variant="h6"
           component={Link}
@@ -40,76 +47,86 @@ const Navbar = () => {
           sx={{
             textDecoration: "none",
             color: "white",
-            fontWeight: 700,
-            letterSpacing: 1,
+            fontWeight: 800,
+            fontSize: 50,
           }}
         >
           AESP
         </Typography>
 
-        {/* Desktop menu (lớn hơn 600px) */}
-        <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
+        {/* Desktop menu */}
+        <Box
+          sx={{
+            display: { xs: "none", md: "flex" },
+            gap: 1,
+            alignItems: "center",
+          }}
+        >
           {user ? (
             <>
-              <Button color="inherit" component={Link} to="/dashboard">
+              <Button
+                color="inherit"
+                component={Link}
+                to="/dashboard"
+                sx={{ fontSize: 18, fontWeight: 500 }}
+              >
                 Dashboard
               </Button>
-
-              {/* Learner menu */}
-              {user.role === "learner" && (
+              {user.role === "LEARNER" && (
                 <>
                   <Button
                     color="inherit"
                     component={Link}
-                    to="/initial-assessment"
+                    to="/packages"
+                    sx={{ fontSize: 18, fontWeight: 500 }}
                   >
-                    Test đầu vào
-                  </Button>
-                  <Button color="inherit" component={Link} to="/profile">
-                    Hồ sơ
-                  </Button>
-                  <Button color="inherit" component={Link} to="/packages">
                     Gói dịch vụ
                   </Button>
-                  <Button color="inherit" component={Link} to="/learning-path">
-                    Lộ trình học
-                  </Button>
-                  <Button color="inherit" component={Link} to="/practice">
+                  <Button
+                    color="inherit"
+                    component={Link}
+                    to="/practice"
+                    sx={{ fontSize: 18, fontWeight: 500 }}
+                  >
                     Luyện nói
-                  </Button>
-                  <Button color="inherit" component={Link} to="/progress">
-                    Tiến độ
-                  </Button>
-                  <Button color="inherit" component={Link} to="/reports">
-                    Báo cáo
                   </Button>
                 </>
               )}
-
-              {/* Mentor menu */}
-              {user.role === "mentor" && (
-                <Button color="inherit" component={Link} to="/mentor-feedback">
-                  Phản hồi học viên
+              {user.role === "MENTOR" && (
+                <Button color="inherit" component={Link} to="/mentor/documents">
+                  Tài liệu
                 </Button>
               )}
 
-              {/* Admin menu (nếu cần thêm) */}
-              {user.role === "admin" && (
-                <Button
-                  color="inherit"
-                  component={Link}
-                  to="/admin/manage-users"
-                >
-                  Quản lý người dùng
-                </Button>
-              )}
+              {/* Chuông thông báo - Click vào dropdown sẽ xem nhanh */}
+              <NotificationBell
+                userId={(user as any).userId || (user as any).id}
+              />
 
               <Button
+                variant="outlined"
                 color="inherit"
                 onClick={handleLogout}
                 sx={{
-                  background: "rgba(255,255,255,0.15)",
-                  "&:hover": { background: "rgba(255,255,255,0.25)" },
+                  padding: "10px 24px",
+                  borderRadius: "30px",
+                  border: "2px solid white",
+                  background: "white",
+                  color: "blue",
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  transition: "0.3s",
+                  boxShadow: "none",
+
+                  "&:hover": {
+                    transform: "translateY(-3px) scale(1.02)",
+                    boxShadow: "0 8px 20px rgba(255, 255, 255, 0.3)",
+                    color: "white",
+                    filter: "brightness(1.1)",
+                    background:
+                      "linear-gradient(to right, #6a11cb 0%, #2575fc 100%)",
+                    border: "2px solid transparent",
+                  },
                 }}
               >
                 Đăng xuất
@@ -117,7 +134,32 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <Button color="inherit" component={Link} to="/login">
+              <Button
+                color="inherit"
+                component={Link}
+                to="/login"
+                sx={{
+                  padding: "10px 24px",
+                  borderRadius: "30px",
+                  border: "2px solid white",
+                  background: "white",
+                  color: "blue",
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  transition: "0.3s",
+                  boxShadow: "none",
+
+                  "&:hover": {
+                    transform: "translateY(-3px) scale(1.02)",
+                    boxShadow: "0 8px 20px rgba(255, 255, 255, 0.3)",
+                    color: "white",
+                    filter: "brightness(1.1)",
+                    background:
+                      "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)",
+                    border: "2px solid transparent",
+                  },
+                }}
+              >
                 Đăng nhập
               </Button>
               <Button
@@ -125,6 +167,26 @@ const Navbar = () => {
                 color="secondary"
                 component={Link}
                 to="/register"
+                sx={{
+                  ml: 1,
+                  padding: "10px 24px",
+                  borderRadius: "30px",
+                  background: "white",
+                  color: "#667eea",
+                  fontWeight: 700,
+                  transition: "0.3s",
+                  border: "none",
+                  boxShadow: "none",
+
+                  "&:hover": {
+                    transform: "translateY(-3px) scale(1.02)",
+                    boxShadow: "0 8px 20px rgba(255, 255, 255, 0.3)",
+                    color: "white",
+                    filter: "brightness(1.1)",
+                    background:
+                      "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)",
+                  },
+                }}
               >
                 Đăng ký
               </Button>
@@ -132,145 +194,46 @@ const Navbar = () => {
           )}
         </Box>
 
-        {/* Mobile menu (nhỏ hơn 600px) */}
-        <Box sx={{ display: { xs: "flex", md: "none" } }}>
-          <IconButton
-            size="large"
-            aria-label="menu"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={handleMenu}
-            color="inherit"
-          >
+        {/* Mobile Menu (Cho điện thoại) */}
+        <Box
+          sx={{
+            display: { xs: "flex", md: "none" },
+            alignItems: "center",
+            gap: 1,
+          }}
+        >
+          {user && (
+            <NotificationBell
+              userId={(user as any).userId || (user as any).id}
+            />
+          )}
+          <IconButton onClick={handleMenu} color="inherit">
             <MenuIcon />
           </IconButton>
           <Menu
-            id="menu-appbar"
             anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            {user ? (
-              <>
-                <MenuItem
-                  onClick={() => {
-                    handleClose();
-                    navigate("/dashboard");
-                  }}
-                >
-                  Dashboard
-                </MenuItem>
-
-                {user.role === "learner" && (
-                  <>
-                    <MenuItem
-                      onClick={() => {
-                        handleClose();
-                        navigate("/initial-assessment");
-                      }}
-                    >
-                      Test đầu vào
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => {
-                        handleClose();
-                        navigate("/profile");
-                      }}
-                    >
-                      Hồ sơ
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => {
-                        handleClose();
-                        navigate("/packages");
-                      }}
-                    >
-                      Gói dịch vụ
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => {
-                        handleClose();
-                        navigate("/learning-path");
-                      }}
-                    >
-                      Lộ trình học
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => {
-                        handleClose();
-                        navigate("/practice");
-                      }}
-                    >
-                      Luyện nói
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => {
-                        handleClose();
-                        navigate("/progress");
-                      }}
-                    >
-                      Tiến độ
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => {
-                        handleClose();
-                        navigate("/reports");
-                      }}
-                    >
-                      Báo cáo
-                    </MenuItem>
-                  </>
-                )}
-
-                {user.role === "mentor" && (
-                  <MenuItem
-                    onClick={() => {
-                      handleClose();
-                      navigate("/mentor-feedback");
-                    }}
-                  >
-                    Phản hồi học viên
-                  </MenuItem>
-                )}
-
-                <MenuItem
-                  onClick={() => {
-                    handleClose();
-                    handleLogout();
-                  }}
-                >
-                  Đăng xuất
-                </MenuItem>
-              </>
-            ) : (
-              <>
-                <MenuItem
-                  onClick={() => {
-                    handleClose();
-                    navigate("/login");
-                  }}
-                >
-                  Đăng nhập
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    handleClose();
-                    navigate("/register");
-                  }}
-                >
-                  Đăng ký
-                </MenuItem>
-              </>
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                navigate("/dashboard");
+              }}
+            >
+              Dashboard
+            </MenuItem>
+            {user && (
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  navigate("/notifications");
+                }}
+              >
+                Thông báo
+              </MenuItem>
             )}
+            <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
           </Menu>
         </Box>
       </Toolbar>
