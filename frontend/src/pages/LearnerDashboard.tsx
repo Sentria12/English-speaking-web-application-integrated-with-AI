@@ -78,7 +78,7 @@ const LearnerDashboard = () => {
       </Box>
     );
 
-  // Đảm bảo leaderboard luôn là mamlng để tránh lỗi .map()
+  
   const leaderboardList = Array.isArray(data?.leaderboard)
     ? data.leaderboard
     : [];
@@ -130,7 +130,7 @@ const LearnerDashboard = () => {
                 Chuỗi học tập
               </Typography>
               <Typography variant="h3" fontWeight="bold">
-                {/* Khớp với @JsonProperty("current_streak_days") của Backend */}
+                
                 {data?.current_streak_days || 0}
                 <small style={{ fontSize: "20px", marginLeft: "8px" }}>
                   Ngày
