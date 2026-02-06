@@ -12,31 +12,18 @@ public class LearnerService {
 
     @Autowired
     private LearnerRepository learnerRepository;
-
     @Autowired
     private UserRepository userRepository;
 
     public Learner getProfile(Integer userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy user"));
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null)
+            return null;
 
-        Learner learner = learnerRepository.findByUser(user);
-        if (learner == null) {
-            throw new RuntimeException("Không tìm thấy profile learner");
-        }
-        return learner;
+        return learnerRepository.findByUser(user);
     }
 
-    public String updateProfile(Learner updatedLearner) {
-        Learner learner = learnerRepository.findById(updatedLearner.getLearnerId())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy learner"));
-
-        learner.setEnglishLevel(updatedLearner.getEnglishLevel());
-        learner.setPronunciationScore(updatedLearner.getPronunciationScore());
-        learner.setLearningGoals(updatedLearner.getLearningGoals());
-        learner.setPreferredTopics(updatedLearner.getPreferredTopics());
-
+    public void updateProfile(Learner learner) {
         learnerRepository.save(learner);
-        return "Cập nhật profile thành công";
     }
 }
