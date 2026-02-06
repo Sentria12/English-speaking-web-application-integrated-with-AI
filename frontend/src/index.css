@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css");
 
 * {
   margin: 0;
@@ -8,7 +9,7 @@
 
 body {
   font-family: "Inter", sans-serif;
-  background: linear-gradient(135deg, #f0f7ff 0%, #e6f0ff 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #1e293b;
   min-height: 100vh;
 }
@@ -93,5 +94,163 @@ body {
   .heatmap-cell {
     width: 32px;
     height: 32px;
+  }
+}
+
+/* ================= HERO SECTION ================= */
+
+.hero-section {
+  position: relative;
+  text-align: center;
+  padding: 60px 20px 40px;
+}
+
+.hero-title {
+  font-size: 3.4rem;
+  font-weight: 700;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.highlight {
+  background: linear-gradient(135deg, #ffd89b, #19547b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  font-size: 1.3rem;
+  max-width: 750px;
+  margin: 0 auto;
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+/* ================= BUTTONS STYLE ================= */
+
+.btn-primary {
+  padding: 10px 24px;
+  border-radius: 30px;
+  background: white;
+  color: #667eea;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.3s;
+  border: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+  color: white;
+  transform: scale(1.02);
+  filter: brightness(1.1);
+  background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+}
+
+.btn-outline {
+  padding: 10px 24px;
+  border-radius: 30px;
+  border: 2px solid white;
+  background: white;
+  color: blue;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.btn-outline:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+  color: white;
+  transform: scale(1.02);
+  filter: brightness(1.1);
+  background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+}
+
+.cta-section {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0 60px;
+}
+
+.btn-primary-large {
+  padding: 18px 55px;
+  border-radius: 50px;
+  background: white;
+  color: #667eea;
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.btn-primary-large:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 35px rgba(255, 255, 255, 0.35);
+}
+
+.features-section {
+  padding: 40px 20px 80px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(15px);
+  padding: 35px 25px;
+  border-radius: 20px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.feature-card:hover {
+  transform: translateY(-12px);
+}
+
+.feature-icon-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 2.2rem;
+  color: #ffd89b;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+  .header-content-box {
+    padding: 10px 20px;
+  }
+
+  .logo-text {
+    font-size: 1.8rem;
+  }
+
+  .hero-title {
+    font-size: 2.4rem;
+    margin-top: 30px;
+  }
+
+  .hero-buttons {
+    gap: 10px;
+  }
+
+  .btn-primary,
+  .btn-outline {
+    padding: 8px 15px;
+    font-size: 0.9rem;
   }
 }
