@@ -1,31 +1,30 @@
 package com.aesp.backend.controller;
 
 import com.aesp.backend.entity.Learner;
+import com.aesp.backend.entity.User;
+import com.aesp.backend.repository.UserRepository;
 import com.aesp.backend.service.LearnerService;
-// Xóa import lombok.Data;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.annotation.security.PermitAll;
-
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/learner")
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class LearnerController {
 
-    private static final Logger logger = LoggerFactory.getLogger(LearnerController.class);
-
     @Autowired
     private LearnerService learnerService;
 
-    // Viết thủ công để tránh lỗi TypeTag UNKNOWN
+    @Autowired
+    private UserRepository userRepository;
+
     public static class AssessmentRequest {
         private Integer userId;
         private String audioBase64;
@@ -47,65 +46,96 @@ public class LearnerController {
         }
     }
 
-    // Thêm vào trong LearnerController.java
     @PermitAll
-    @GetMapping("/profile-info")
-    public ResponseEntity<?> getProfileInfo(@RequestParam Integer userId) {
-        Learner learner = learnerService.getProfile(userId);
-        if (learner == null)
-            return ResponseEntity.status(404).body("Profile not found");
-
-        Map<String, Object> info = new HashMap<>();
-        info.put("level", learner.getEnglishLevel()); // Trả về BEGINNER/ADVANCED
-        info.put("hasCompleted", learner.getHasCompletedInitialAssessment());
-        return ResponseEntity.ok(info);
-    }
-
-    @PermitAll
-    @PostMapping("/initial-assessment")
-    public ResponseEntity<Map<String, Object>> initialAssessment(@RequestBody AssessmentRequest request) {
-        logger.info("Nhận initial-assessment request cho userId: {}", request.getUserId());
+    @GetMapping("/dashboard-stats")
+    public ResponseEntity<?> getDashboardStats(@RequestParam("userId") Integer userId) {
         try {
-            if (request.getUserId() == null)
-                return ResponseEntity.badRequest().body(Map.of("error", "userId null"));
+            if (userId == null)
+                return ResponseEntity.badRequest().body("userId is required");
 
-            Learner learner = learnerService.getProfile(request.getUserId());
-            if (learner == null)
-                return ResponseEntity.status(404).body(Map.of("error", "Không tìm thấy learner"));
+            Learner learner = learnerService.getProfile(userId);
+            if (learner == null) {
+                Map<String, Object> defaultStats = new HashMap<>();
+                defaultStats.put("fullName", "Học viên mới");
+                defaultStats.put("streak", 0);
+                defaultStats.put("pronunciation", 0);
+                defaultStats.put("progressChart", new ArrayList<>());
+                return ResponseEntity.ok(defaultStats);
+            }
 
-            BigDecimal pronunciationScore = BigDecimal.valueOf(8.5);
-            String englishLevel = "ADVANCED";
+            Map<String, Object> stats = new HashMap<>();
+            stats.put("fullName", learner.getUser().getFullName());
+            stats.put("streak", learner.getCurrentStreakDays());
+            stats.put("pronunciation", learner.getPronunciationScore());
 
-            learner.setPronunciationScore(pronunciationScore);
-            learner.setEnglishLevel(Learner.EnglishLevel.valueOf(englishLevel));
-            learner.setHasCompletedInitialAssessment(true);
-            learnerService.updateProfile(learner);
+            List<Map<String, Object>> chart = new ArrayList<>();
+            chart.add(Map.of("date", "Hôm nay", "score",
+                    learner.getPronunciationScore() != null ? learner.getPronunciationScore() : 0));
+            stats.put("progressChart", chart);
 
-            Map<String, Object> result = new HashMap<>();
-            result.put("englishLevel", englishLevel);
-            result.put("pronunciationScore", pronunciationScore);
-            result.put("message", "Test đầu vào hoàn tất.");
-            return ResponseEntity.ok(result);
+            return ResponseEntity.ok(stats);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.status(500).body(Map.of("error", "Lỗi server: " + e.getMessage()));
         }
     }
 
-    // Các phương thức khác giữ nguyên nhưng phải đảm bảo không gọi đến các field
-    // thiếu Getter/Setter
+    @PostMapping("/initial-assessment")
     @PermitAll
-    @GetMapping("/dashboard-stats")
-    public ResponseEntity<?> getDashboardStats(@RequestParam Integer userId) {
+    public ResponseEntity<?> initialAssessment(@RequestBody AssessmentRequest request) {
         try {
+            Integer userId = request.getUserId();
+            if (userId == null) {
+                return ResponseEntity.badRequest().body(Map.of("error", "userId rỗng từ Frontend gửi lên"));
+            }
+
             Learner learner = learnerService.getProfile(userId);
-            if (learner == null)
-                return ResponseEntity.status(404).body("Không tìm thấy");
-            Map<String, Object> stats = new HashMap<>();
-            stats.put("streak", learner.getCurrentStreakDays());
-            stats.put("pronunciation", learner.getPronunciationScore());
-            return ResponseEntity.ok(stats);
+
+            if (learner == null) {
+                User user = userRepository.findById(userId)
+                        .orElseThrow(() -> new RuntimeException("User ID không tồn tại"));
+                learner = new Learner();
+                learner.setUser(user);
+                learner.setTotalPracticeHours(0);
+                learner.setCurrentStreakDays(0);
+            }
+
+            String level = "INTERMEDIATE";
+            BigDecimal score = BigDecimal.valueOf(7.2);
+
+            learner.setEnglishLevel(Learner.EnglishLevel.valueOf(level));
+            learner.setPronunciationScore(score);
+            learner.setHasCompletedInitialAssessment(true);
+
+            learnerService.updateProfile(learner);
+
+            return ResponseEntity.ok(Map.of(
+                    "englishLevel", level,
+                    "pronunciationScore", score,
+                    "message", "Lưu kết quả thành công!"));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.status(400).body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PutMapping("/select-mentor")
+    @PermitAll
+    public ResponseEntity<?> selectMentor(@RequestParam Integer learnerId, @RequestParam Integer mentorId) {
+        try {
+            User learner = userRepository.findById(learnerId)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy Learner"));
+            User mentor = userRepository.findById(mentorId)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy Mentor"));
+
+            if (mentor.getRole() != User.Role.MENTOR) {
+                return ResponseEntity.badRequest().body(Map.of("error", "User được chọn không phải là Mentor"));
+            }
+
+            learner.setMentor(mentor);
+            userRepository.save(learner);
+
+            return ResponseEntity.ok(Map.of("message", "Bạn đã chọn Mentor " + mentor.getFullName() + " thành công!"));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(Map.of("error", e.getMessage()));
         }
     }
 }
