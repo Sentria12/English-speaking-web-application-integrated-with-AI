@@ -9,16 +9,11 @@ import java.util.List;
 @Repository
 public interface SpeakingEvaluationRepository extends JpaRepository<SpeakingEvaluation, Long> {
 
-        List<SpeakingEvaluation> findByLearnerIdOrderByCreatedAtDesc(Integer learnerId);
+    // Lấy danh sách đánh giá của một học viên để vẽ biểu đồ tiến độ
+    List<SpeakingEvaluation> findByLearnerIdOrderByCreatedAtDesc(Integer learnerId);
 
-        @Query("SELECT AVG(e.pronunciationScore), AVG(e.grammarScore), AVG(e.fluencyScore) " +
-                        "FROM SpeakingEvaluation e WHERE e.learnerId = ?1")
-        List<Object[]> getAverageScoresByLearner(Integer learnerId);
-
-        @Query(value = "SELECT u.full_name, l.pronunciation_score " +
-                        "FROM learner l " +
-                        "JOIN user u ON l.user_id = u.user_id " +
-                        "WHERE l.pronunciation_score IS NOT NULL " +
-                        "ORDER BY l.pronunciation_score DESC LIMIT 10", nativeQuery = true)
-        List<Object[]> getTopLearnersByPronunciation();
+    // Tính điểm trung bình các kỹ năng của học viên
+    @Query("SELECT AVG(e.pronunciationScore), AVG(e.grammarScore), AVG(e.fluencyScore) " +
+            "FROM SpeakingEvaluation e WHERE e.learnerId = ?1")
+    List<Object[]> getAverageScoresByLearner(Integer learnerId);
 }
