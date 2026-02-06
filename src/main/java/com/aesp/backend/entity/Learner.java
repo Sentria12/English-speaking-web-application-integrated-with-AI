@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 @Table(name = "learner")
 public class Learner {
 
-    // ĐỊNH NGHĨA ENUM PUBLIC ĐỂ CONTROLLER TRUY CẬP ĐƯỢC
     public enum EnglishLevel {
         BEGINNER,
         INTERMEDIATE,
