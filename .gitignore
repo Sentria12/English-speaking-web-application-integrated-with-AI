@@ -1,0 +1,2 @@
+# Ignore specific application properties files that might contain secrets
+src/main/resources/application.properties
