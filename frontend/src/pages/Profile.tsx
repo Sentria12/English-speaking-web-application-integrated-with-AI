@@ -1,26 +1,15 @@
 import { useState, useEffect } from "react";
-import api from "../utils/api"; // axios instance
+import api from "../utils/api";
 import {
   Box,
   Typography,
   TextField,
   Button,
-  Chip,
   Paper,
   Grid,
   Alert,
   MenuItem,
 } from "@mui/material";
-
-const topicsList = [
-  "business",
-  "travel",
-  "daily life",
-  "healthcare",
-  "technology",
-  "education",
-  "tourism",
-];
 
 const Profile = () => {
   const [profile, setProfile] = useState({
@@ -29,86 +18,92 @@ const Profile = () => {
     phone: "",
     goals: "",
     preferredTopics: [] as string[],
-    specializedIndustry: "",
   });
-  const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await api.get("/learner/profile", {
-          params: { userId: 1 }, // thay bằng userId thật từ login
-        });
-        setProfile(res.data);
-      } catch (err: any) {
-        setError("Không tải được hồ sơ. Vui lòng đăng nhập lại.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProfile();
+    api
+      .get("/learner/profile")
+      .then((res) => setProfile(res.data))
+      .catch(() => setError("Không tải được hồ sơ. Kiểm tra đăng nhập."))
+      .finally(() => setLoading(false));
   }, []);
 
   const handleSave = async () => {
     try {
       await api.put("/learner/profile", profile);
-      setSaved(true);
-      setTimeout(() => setSaved(false), 3000);
-    } catch (err) {
-      setError("Cập nhật thất bại");
+      setSuccess(true);
+    } catch {
+      setError("Cập nhật thất bại.");
     }
-  };
-
-  const toggleTopic = (topic: string) => {
-    setProfile((prev) => ({
-      ...prev,
-      preferredTopics: prev.preferredTopics.includes(topic)
-        ? prev.preferredTopics.filter((t) => t !== topic)
-        : [...prev.preferredTopics, topic],
-    }));
   };
 
   if (loading)
     return (
-      <Typography sx={{ textAlign: "center", mt: 10 }}>
-        Đang tải hồ sơ...
+      <Typography align="center" mt={10}>
+        Đang tải...
       </Typography>
     );
-  if (error) return <Alert severity="error">{error}</Alert>;
 
   return (
-    <Box sx={{ maxWidth: 900, mx: "auto", p: 4 }}>
-      <Typography variant="h4" gutterBottom align="center">
-        Hồ sơ cá nhân & Tùy chỉnh
-      </Typography>
-
+    <Box sx={{ maxWidth: 800, mx: "auto", p: 4 }}>
       <Paper sx={{ p: 4, borderRadius: 3 }}>
+        <Typography variant="h5" mb={3} fontWeight="bold">
+          Hồ Sơ Cá Nhân
+        </Typography>
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+        {success && (
+          <Alert severity="success" sx={{ mb: 2 }}>
+            Đã lưu thành công!
+          </Alert>
+        )}
         <Grid container spacing={3}>
-          {/* Các field giữ nguyên, chỉ thay onChange để cập nhật state */}
-          {/* ... giữ nguyên code cũ của bạn ... */}
-
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            size="large"
-            sx={{ mt: 5, py: 1.5 }}
-            onClick={handleSave}
-          >
-            Lưu thông tin hồ sơ
-          </Button>
-
-          {saved && (
-            <Alert severity="success" sx={{ mt: 3 }}>
-              Đã cập nhật hồ sơ thành công!
-            </Alert>
-          )}
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Họ Tên"
+              value={profile.fullName}
+              onChange={(e) =>
+                setProfile({ ...profile, fullName: e.target.value })
+              }
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextField
+              fullWidth
+              label="Số điện thoại"
+              value={profile.phone}
+              onChange={(e) =>
+                setProfile({ ...profile, phone: e.target.value })
+              }
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              multiline
+              rows={3}
+              label="Mục tiêu học tập"
+              value={profile.goals}
+              onChange={(e) =>
+                setProfile({ ...profile, goals: e.target.value })
+              }
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button variant="contained" size="large" onClick={handleSave}>
+              Lưu thông tin
+            </Button>
+          </Grid>
         </Grid>
       </Paper>
     </Box>
   );
 };
-
 export default Profile;

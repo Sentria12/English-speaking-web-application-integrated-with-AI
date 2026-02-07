@@ -1,124 +1,55 @@
 import { useState, useEffect } from "react";
 import api from "../utils/api";
-import {
-  Box,
-  Typography,
-  Paper,
-  Tabs,
-  Tab,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from "@mui/material";
-
-function TabPanel(props: {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}) {
-  const { children, value, index, ...other } = props;
-  return (
-    <div role="tabpanel" hidden={value !== index} {...other}>
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-}
+import { Box, Typography, Paper, Tabs, Tab, Table, TableBody, TableCell, TableHead, TableRow, CircularProgress } from "@mui/material";
 
 const Reports = () => {
   const [tab, setTab] = useState(0);
-  const [weeklyData, setWeeklyData] = useState([]);
-  const [monthlyData, setMonthlyData] = useState([]);
+  const [data, setData] = useState({ weekly: [], monthly: [] });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchReports = async () => {
+    const fetch = async () => {
       try {
-        const weekly = await api.get("/reports/weekly", {
-          params: { learnerId: 1 },
-        });
-        const monthly = await api.get("/reports/monthly", {
-          params: { learnerId: 1 },
-        });
-        setWeeklyData(weekly.data);
-        setMonthlyData(monthly.data);
-      } catch (err) {
-        console.error("Lỗi tải báo cáo");
-      } finally {
-        setLoading(false);
-      }
+        const [w, m] = await Promise.all([api.get("/reports/weekly"), api.get("/reports/monthly")]);
+        setData({ weekly: w.data, monthly: m.data });
+      } catch { console.error("Lỗi tải báo cáo"); }
+      finally { setLoading(false); }
     };
-    fetchReports();
+    fetch();
   }, []);
 
-  if (loading)
-    return (
-      <Typography sx={{ textAlign: "center", mt: 10 }}>
-        Đang tải báo cáo...
-      </Typography>
-    );
+  if (loading) return <CircularProgress sx={{ display: "block", mx: "auto", mt: 10 }} />;
 
   return (
     <Box sx={{ p: 4 }}>
-      <Typography variant="h4" gutterBottom align="center">
-        Báo cáo hiệu suất học tập
-      </Typography>
-
-      <Paper sx={{ width: "100%", borderRadius: 3 }}>
+      <Typography variant="h4" align="center" mb={4}>Báo Cáo Hiệu Suất</Typography>
+      <Paper>
         <Tabs value={tab} onChange={(_, v) => setTab(v)} centered>
-          <Tab label="Báo cáo tuần" />
-          <Tab label="Báo cáo tháng" />
+          <Tab label="Theo Tuần" />
+          <Tab label="Theo Tháng" />
         </Tabs>
-
-        <TabPanel value={tab} index={0}>
+        <Box p={3}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Tuần</TableCell>
+                <TableCell>{tab === 0 ? "Tuần" : "Tháng"}</TableCell>
                 <TableCell>Giờ luyện</TableCell>
-                <TableCell>Số buổi</TableCell>
-                <TableCell>Điểm trung bình</TableCell>
+                <TableCell>Điểm TB</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {weeklyData.map((row: any, i: number) => (
+              {(tab === 0 ? data.weekly : data.monthly).map((row: any, i) => (
                 <TableRow key={i}>
-                  <TableCell>{row.week}</TableCell>
-                  <TableCell>{row.hours} giờ</TableCell>
-                  <TableCell>{row.sessions} buổi</TableCell>
+                  <TableCell>{tab === 0 ? row.week : row.month}</TableCell>
+                  <TableCell>{row.hours}h</TableCell>
                   <TableCell>{row.avgScore}/10</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-        </TabPanel>
-
-        <TabPanel value={tab} index={1}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Tháng</TableCell>
-                <TableCell>Giờ luyện</TableCell>
-                <TableCell>Số buổi</TableCell>
-                <TableCell>Điểm trung bình</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {monthlyData.map((row: any, i: number) => (
-                <TableRow key={i}>
-                  <TableCell>{row.month}</TableCell>
-                  <TableCell>{row.hours} giờ</TableCell>
-                  <TableCell>{row.sessions} buổi</TableCell>
-                  <TableCell>{row.avgScore}/10</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TabPanel>
+        </Box>
       </Paper>
     </Box>
   );
 };
-
 export default Reports;

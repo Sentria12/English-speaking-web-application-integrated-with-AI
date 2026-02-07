@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import api from "../utils/api"; // axios instance
+import api from "../utils/api";
 import {
   Box,
   Typography,
@@ -12,9 +12,10 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
   CircularProgress,
   Alert,
+  Stack,
+  Paper,
 } from "@mui/material";
 import PaymentForm from "../components/PaymentForm";
 
@@ -23,20 +24,25 @@ const Packages = () => {
   const [loading, setLoading] = useState(true);
   const [openPayment, setOpenPayment] = useState(false);
   const [selectedPkg, setSelectedPkg] = useState<any>(null);
-  const [successMsg, setSuccessMsg] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchPackages = async () => {
-      try {
-        const res = await api.get("/packages");
-        setPackages(res.data);
-      } catch (err) {
-        setSuccessMsg("Lỗi tải gói dịch vụ");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchPackages();
+    // Gọi API lấy danh sách gói
+    api
+      .get("/packages")
+      .then((res) => {
+        if (Array.isArray(res.data)) {
+          setPackages(res.data);
+        } else {
+          setPackages([]);
+          console.warn("Dữ liệu trả về không phải là mảng:", res.data);
+        }
+      })
+      .catch((err) => {
+        console.error("Lỗi API Packages:", err);
+        setError("Không thể kết nối đến máy chủ hoặc chưa đăng nhập.");
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const handleBuy = (pkg: any) => {
@@ -44,62 +50,100 @@ const Packages = () => {
     setOpenPayment(true);
   };
 
-  const handlePaymentSuccess = () => {
-    setOpenPayment(false);
-    setSuccessMsg(`Đã mua thành công gói ${selectedPkg.name}!`);
-  };
-
+  // 1. Trạng thái đang tải
   if (loading)
-    return <CircularProgress sx={{ display: "block", mx: "auto", mt: 10 }} />;
+    return (
+      <Stack alignItems="center" sx={{ mt: 10 }}>
+        <CircularProgress />
+        <Typography sx={{ mt: 2 }}>
+          Đang tải danh sách gói dịch vụ...
+        </Typography>
+      </Stack>
+    );
 
   return (
     <Box sx={{ p: 4 }}>
-      <Typography variant="h4" gutterBottom align="center">
-        Các gói dịch vụ luyện nói
+      <Typography
+        variant="h4"
+        gutterBottom
+        align="center"
+        fontWeight="bold"
+        color="primary"
+      >
+        Gói Dịch Vụ Luyện Nói
       </Typography>
-
-      {successMsg && (
-        <Alert severity="success" sx={{ mb: 4 }}>
-          {successMsg}
+      {/* hiển thị lỗi nếu có  */}
+      {error && (
+        <Alert severity="error" sx={{ mb: 3 }}>
+          {error}
         </Alert>
+      )}
+
+      {!loading && packages.length === 0 && !error && (
+        <Paper sx={{ p: 5, textAlign: "center", bgcolor: "#f5f5f5" }}>
+          <Typography variant="h6" color="textSecondary">
+            Hiện chưa có gói dịch vụ nào khả dụng.
+          </Typography>
+          <Typography variant="body2">
+            Vui lòng kiểm tra lại Database bảng 'learning_packages'.
+          </Typography>
+        </Paper>
       )}
 
       <Grid container spacing={4}>
         {packages.map((pkg) => (
-          <Grid item xs={12} sm={6} md={4} key={pkg.packageId}>
-            <Card sx={{ height: "100%", borderRadius: 3, boxShadow: 4 }}>
-              <CardContent>
-                <Typography variant="h5" gutterBottom>
+          <Grid item xs={12} sm={6} md={4} key={pkg.packageId || pkg.id}>
+            <Card
+              sx={{
+                height: "100%",
+                borderRadius: 3,
+                boxShadow: 4,
+                display: "flex",
+                flexDirection: "column",
+                transition: "0.3s",
+                "&:hover": { boxShadow: 10 },
+              }}
+            >
+              <CardContent sx={{ flexGrow: 1 }}>
+                <Typography
+                  variant="h5"
+                  color="primary"
+                  gutterBottom
+                  fontWeight="bold"
+                >
                   {pkg.packageName}
                 </Typography>
-                <Typography variant="h4" color="primary" sx={{ mb: 2 }}>
-                  {pkg.price.toLocaleString("vi-VN")} VNĐ
+                <Typography variant="h4" sx={{ mb: 2, fontWeight: "bold" }}>
+                  {pkg.price?.toLocaleString()}{" "}
+                  <Typography component="span" variant="h6">
+                    VNĐ
+                  </Typography>
                 </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mb: 2 }}
-                >
-                  Thời hạn: {pkg.durationDays} ngày
-                </Typography>
-                <Box sx={{ mb: 2 }}>
-                  {pkg.hasMentor ? (
-                    <Chip label="Có mentor" color="primary" />
-                  ) : (
-                    <Chip label="Chỉ AI" color="default" />
-                  )}
+
+                <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
                   <Chip
-                    label={`Tối đa ${pkg.maxPracticeSessions} buổi`}
-                    sx={{ ml: 1 }}
+                    label={`${pkg.durationDays} ngày`}
+                    color="info"
+                    variant="outlined"
                   />
-                </Box>
-                <Typography variant="body2">{pkg.description}</Typography>
+                  <Chip
+                    label={pkg.hasMentor ? "Có Mentor" : "Chỉ AI"}
+                    color={pkg.hasMentor ? "secondary" : "default"}
+                  />
+                </Stack>
+
+                <Typography variant="body2" color="text.secondary">
+                  {pkg.description || "Không có mô tả cho gói này."}
+                </Typography>
               </CardContent>
-              <CardActions sx={{ p: 2, pt: 0 }}>
+
+              <CardActions sx={{ p: 2 }}>
                 <Button
                   variant="contained"
                   fullWidth
+                  size="large"
                   onClick={() => handleBuy(pkg)}
+                  sx={{ borderRadius: 2 }}
                 >
                   Chọn gói này
                 </Button>
@@ -109,23 +153,26 @@ const Packages = () => {
         ))}
       </Grid>
 
+      {/* Dialog thanh toán */}
       <Dialog
         open={openPayment}
         onClose={() => setOpenPayment(false)}
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle>Thanh toán gói: {selectedPkg?.packageName}</DialogTitle>
-        <DialogContent>
+        <DialogTitle sx={{ fontWeight: "bold" }}>
+          Thanh toán: {selectedPkg?.packageName}
+        </DialogTitle>
+        <DialogContent dividers>
           <PaymentForm
             packageId={selectedPkg?.packageId}
             amount={selectedPkg?.price}
-            onSuccess={handlePaymentSuccess}
+            onSuccess={() => {
+              setOpenPayment(false);
+              alert("Thanh toán thành công!");
+            }}
           />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenPayment(false)}>Hủy</Button>
-        </DialogActions>
       </Dialog>
     </Box>
   );

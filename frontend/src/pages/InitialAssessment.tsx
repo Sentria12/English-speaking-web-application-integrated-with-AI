@@ -1,197 +1,176 @@
-import { useState, useRef } from "react";
-import axios from "axios";
+import React, { useState, useRef } from "react";
+import api from "../utils/api";
+import { useAuth } from "../context/AuthContext";
 import {
   Box,
   Typography,
   Button,
   Paper,
-  Alert,
   CircularProgress,
+  Alert,
   Stepper,
   Step,
   StepLabel,
-  StepContent,
-  Grid,
+  Stack,
 } from "@mui/material";
-
-const steps = ["Hướng dẫn", "Ghi âm", "Kết quả"];
+import MicIcon from "@mui/icons-material/Mic";
+import StopIcon from "@mui/icons-material/Stop";
 
 const InitialAssessment = () => {
   const [activeStep, setActiveStep] = useState(0);
-  const [recording, setRecording] = useState(false);
-  const [analyzing, setAnalyzing] = useState(false);
-  const [result, setResult] = useState<any>(null);
-  const [error, setError] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [assessmentResult, setAssessmentResult] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<BlobPart[]>([]);
+  const audioChunksRef = useRef<Blob[]>([]);
 
-  const handleNext = () => {
-    setActiveStep((prev) => prev + 1);
-  };
-
-  const startRecording = async () => {
+  const uploadAudio = async (base64Data: string) => {
+    setIsUploading(true);
+    setError(null);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
+      const storageUser = JSON.parse(localStorage.getItem("user") || "{}");
+      let finalId = user?.id || storageUser.id;
 
-      mediaRecorder.ondataavailable = (event) => {
-        audioChunksRef.current.push(event.data);
-      };
+      if (
+        !finalId ||
+        finalId === 0 ||
+        (typeof finalId === "string" && finalId.includes("@"))
+      ) {
+        setError(
+          "Không tìm thấy ID người dùng hợp lệ. Vui lòng đăng xuất và đăng nhập lại.",
+        );
+        setIsUploading(false);
+        return;
+      }
 
-      mediaRecorder.start();
-      setRecording(true);
-      setError("");
-    } catch (err) {
-      setError("Không thể truy cập micro. Vui lòng cấp quyền.");
+      const response = await api.post("/learner/initial-assessment", {
+        userId: Number(finalId),
+        audioBase64: base64Data,
+      });
+
+      setAssessmentResult(response.data);
+      localStorage.setItem("hasCompletedAssessment", "true");
+      setActiveStep(2);
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 3000);
+    } catch (err: any) {
+      const msg =
+        err.response?.data?.error ||
+        "Lỗi server (400). Hãy kiểm tra lại ID người dùng.";
+      setError(msg);
+    } finally {
+      setIsUploading(false);
     }
   };
 
-  const stopAndSubmit = async () => {
-    if (!mediaRecorderRef.current) return;
-
-    mediaRecorderRef.current.stop();
-    setRecording(false);
-    setAnalyzing(true);
-
-    mediaRecorderRef.current.onstop = async () => {
-      const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
-      audioChunksRef.current = []; // reset
-
-      try {
-        const formData = new FormData();
-        formData.append("audio", audioBlob, "initial-test.wav");
-
-        const res = await axios.post(
-          "http://localhost:8080/api/assessment/initial-test",
-          formData,
-          { headers: { "Content-Type": "multipart/form-data" } },
-        );
-
-        setResult(res.data);
-        setActiveStep(2);
-      } catch (err: any) {
-        setError(err.response?.data?.error || "Lỗi phân tích bài test");
-      } finally {
-        setAnalyzing(false);
-      }
-    };
+  const handleStopRecording = () => {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      mediaRecorderRef.current.onstop = async () => {
+        const audioBlob = new Blob(audioChunksRef.current, {
+          type: "audio/wav",
+        });
+        const reader = new FileReader();
+        reader.readAsDataURL(audioBlob);
+        reader.onloadend = () => {
+          const base64Data = (reader.result as string).split(",")[1];
+          uploadAudio(base64Data);
+        };
+      };
+    }
   };
 
-  const getStepContent = (step: number) => {
-    switch (step) {
-      case 0:
-        return (
-          <Box sx={{ textAlign: "center" }}>
-            <Typography variant="h5" gutterBottom>
-              Bài kiểm tra trình độ đầu vào
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 4 }}>
-              Đọc to đoạn văn sau trong 60 giây. Hệ thống sẽ đánh giá level và
-              phát âm để tạo lộ trình phù hợp.
-            </Typography>
-            <Button variant="contained" size="large" onClick={handleNext}>
-              Bắt đầu
-            </Button>
-          </Box>
-        );
-      case 1:
-        return (
-          <Box sx={{ textAlign: "center" }}>
-            <Typography variant="h6" gutterBottom>
-              Đọc to đoạn văn sau:
-            </Typography>
-            <Paper sx={{ p: 4, mb: 4, bgcolor: "#f8fafc", borderRadius: 3 }}>
-              <Typography
-                variant="body1"
-                sx={{ lineHeight: 1.8, fontSize: "1.1rem" }}
-              >
-                "Hello, my name is Linh. I live in Ho Chi Minh City, Vietnam. I
-                am learning English to improve my career opportunities and
-                travel more confidently. My favorite activities are reading
-                books, watching movies, and talking with friends. I hope to
-                speak English fluently one day."
-              </Typography>
-            </Paper>
-
-            {error && (
-              <Alert severity="error" sx={{ mb: 3 }}>
-                {error}
-              </Alert>
-            )}
-
-            <Box sx={{ display: "flex", justifyContent: "center", gap: 3 }}>
-              <Button
-                variant={recording ? "outlined" : "contained"}
-                color={recording ? "error" : "primary"}
-                size="large"
-                onClick={recording ? stopAndSubmit : startRecording}
-                disabled={analyzing}
-              >
-                {recording ? "Dừng & Gửi" : "Bắt đầu ghi âm"}
-              </Button>
-              {analyzing && <CircularProgress />}
-            </Box>
-          </Box>
-        );
-      case 2:
-        return (
-          <Box sx={{ textAlign: "center" }}>
-            <Typography variant="h5" gutterBottom color="primary">
-              Kết quả bài kiểm tra
-            </Typography>
-
-            <Paper sx={{ p: 4, mb: 4 }}>
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h6">Trình độ</Typography>
-                  <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                    {result?.englishLevel || "Intermediate"}
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h6">Phát âm</Typography>
-                  <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                    {result?.pronunciationScore?.toFixed(1) || "7.5"} / 10
-                  </Typography>
-                </Grid>
-              </Grid>
-
-              <Typography variant="body1" sx={{ mt: 4 }}>
-                {result?.feedback ||
-                  "Bạn có nền tảng tốt, cần luyện thêm phát âm và ngữ điệu."}
-              </Typography>
-            </Paper>
-
-            <Button
-              variant="contained"
-              color="primary"
-              size="large"
-              onClick={() => (window.location.href = "/learning-path")}
-            >
-              Xem lộ trình học
-            </Button>
-          </Box>
-        );
-      default:
-        return "Unknown step";
+  const handleStartRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      audioChunksRef.current = [];
+      mediaRecorderRef.current.ondataavailable = (e) => {
+        if (e.data.size > 0) audioChunksRef.current.push(e.data);
+      };
+      mediaRecorderRef.current.start();
+      setIsRecording(true);
+      setError(null);
+    } catch (err) {
+      setError("Không thể mở micro.");
     }
   };
 
   return (
-    <Box sx={{ maxWidth: 900, mx: "auto", p: 4 }}>
-      <Typography variant="h4" gutterBottom align="center">
-        Kiểm tra trình độ đầu vào
-      </Typography>
+    <Box sx={{ maxWidth: 800, mx: "auto", mt: 5, p: 3 }}>
+      <Paper elevation={3} sx={{ p: 5, borderRadius: 4 }}>
+        <Stepper activeStep={activeStep} sx={{ mb: 5 }}>
+          {["Giới thiệu", "Kiểm tra", "Kết quả"].map((label) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
 
-      <Stepper activeStep={activeStep} orientation="vertical" sx={{ mt: 4 }}>
-        {steps.map((label, index) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-            <StepContent>{getStepContent(index)}</StepContent>
-          </Step>
-        ))}
-      </Stepper>
+        {error && (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {error}
+          </Alert>
+        )}
+
+        {activeStep === 0 && (
+          <Box textAlign="center">
+            <Button variant="contained" onClick={() => setActiveStep(1)}>
+              Bắt đầu
+            </Button>
+          </Box>
+        )}
+
+        {activeStep === 1 && (
+          <Box textAlign="center">
+            <Typography variant="h6" gutterBottom>
+              Đọc: "English is a global language..."
+            </Typography>
+            <Stack
+              direction="row"
+              spacing={2}
+              justifyContent="center"
+              sx={{ mt: 3 }}
+            >
+              {!isRecording ? (
+                <Button
+                  variant="contained"
+                  startIcon={<MicIcon />}
+                  onClick={handleStartRecording}
+                >
+                  Bắt đầu ghi âm
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="error"
+                  startIcon={<StopIcon />}
+                  onClick={handleStopRecording}
+                >
+                  Dừng & Gửi
+                </Button>
+              )}
+            </Stack>
+            {isUploading && <CircularProgress size={24} sx={{ mt: 2 }} />}
+          </Box>
+        )}
+
+        {activeStep === 2 && assessmentResult && (
+          <Box textAlign="center">
+            <Typography variant="h5" color="success.main">
+              Trình độ: {assessmentResult.englishLevel}
+            </Typography>
+            <Typography>
+              Điểm: {assessmentResult.pronunciationScore}/10
+            </Typography>
+          </Box>
+        )}
+      </Paper>
     </Box>
   );
 };

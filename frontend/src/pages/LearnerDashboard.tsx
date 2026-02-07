@@ -40,7 +40,7 @@ const LearnerDashboard = () => {
 
       try {
         setLoading(true);
-        // Hỗ trợ cả hai cách đặt tên ID phổ biến
+
         const currentId = user.id || (user as any).userId;
 
         const response = await api.get<ProgressResponse>(
@@ -78,7 +78,6 @@ const LearnerDashboard = () => {
       </Box>
     );
 
-  
   const leaderboardList = Array.isArray(data?.leaderboard)
     ? data.leaderboard
     : [];
@@ -130,7 +129,6 @@ const LearnerDashboard = () => {
                 Chuỗi học tập
               </Typography>
               <Typography variant="h3" fontWeight="bold">
-                
                 {data?.current_streak_days || 0}
                 <small style={{ fontSize: "20px", marginLeft: "8px" }}>
                   Ngày

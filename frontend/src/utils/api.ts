@@ -1,23 +1,26 @@
-// src/utils/api.ts
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8080/api", // URL backend thật
+  baseURL: "http://localhost:8080/api",
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Tự động thêm token vào header nếu có (từ localStorage)
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+// Tự động thêm Token vào mọi Request
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
 
-// Xử lý lỗi chung (ví dụ 401 → logout)
 api.interceptors.response.use(
   (response) => response,
   (error) => {

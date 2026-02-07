@@ -93,12 +93,17 @@ const Navbar = () => {
                 </>
               )}
               {user.role === "MENTOR" && (
-                <Button color="inherit" component={Link} to="/mentor/documents">
+                <Button
+                  color="inherit"
+                  component={Link}
+                  to="/mentor/documents"
+                  sx={{ fontSize: 18, fontWeight: 500 }}
+                >
                   Tài liệu
                 </Button>
               )}
 
-              {/* Chuông thông báo - Click vào dropdown sẽ xem nhanh */}
+              {/* chuông thông báo  */}
               <NotificationBell
                 userId={(user as any).userId || (user as any).id}
               />

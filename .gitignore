@@ -1,2 +1,6 @@
-# Ignore specific application properties files that might contain secrets
-src/main/resources/application.properties
+echo node_modules/ >> .gitignore
+echo venv/ >> .gitignore
+echo .env >> .gitignore
+git init
+git add .
+git commit -m "First commit"

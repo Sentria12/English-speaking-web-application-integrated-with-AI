@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../utils/api"; // import axios instance
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Alert from "@mui/material/Alert";
-import Link from "@mui/material/Link";
+import api from "../utils/api";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Alert,
+  Link,
+  CircularProgress,
+} from "@mui/material";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -18,6 +21,7 @@ const Register = () => {
   const [fullName, setFullName] = useState("");
   const [role, setRole] = useState("LEARNER");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Thêm trạng thái loading
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,8 +33,10 @@ const Register = () => {
       return;
     }
 
+    setLoading(true);
+
     try {
-      const res = await api.post("/auth/register", {
+      await api.post("/auth/register", {
         email,
         password,
         fullName,
@@ -40,9 +46,14 @@ const Register = () => {
       alert("Đăng ký thành công! Bạn có thể đăng nhập ngay.");
       navigate("/login");
     } catch (err: any) {
-      setError(
-        err.response?.data || "Đăng ký thất bại. Email có thể đã tồn tại.",
-      );
+      // Lấy thông báo lỗi chi tiết từ backend
+      const serverError =
+        err.response?.data?.message ||
+        err.response?.data ||
+        "Đăng ký thất bại.";
+      setError(serverError);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -51,9 +62,9 @@ const Register = () => {
       sx={{
         maxWidth: 420,
         mx: "auto",
-        mt: 12,
+        mt: 10,
         p: 5,
-        boxShadow: 6,
+        boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
         borderRadius: 4,
         bgcolor: "white",
       }}
@@ -62,9 +73,9 @@ const Register = () => {
         variant="h4"
         gutterBottom
         align="center"
-        sx={{ fontWeight: 700, mb: 4 }}
+        sx={{ fontWeight: 800, mb: 4, color: "#1a1a2e" }}
       >
-        Đăng ký AESP
+        Tạo tài khoản
       </Typography>
 
       {error && (
@@ -76,71 +87,77 @@ const Register = () => {
       <form onSubmit={handleSubmit}>
         <TextField
           fullWidth
-          margin="normal"
           label="Họ và tên"
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
           required
-          variant="outlined"
           sx={{ mb: 2 }}
         />
         <TextField
           fullWidth
-          margin="normal"
           label="Email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          variant="outlined"
           sx={{ mb: 2 }}
         />
         <TextField
           fullWidth
-          margin="normal"
           label="Mật khẩu"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          variant="outlined"
           sx={{ mb: 3 }}
         />
-        <FormControl fullWidth margin="normal" sx={{ mb: 3 }}>
-          <InputLabel>Vai trò</InputLabel>
+
+        <FormControl fullWidth sx={{ mb: 4 }}>
+          <InputLabel>Bạn là...?</InputLabel>
           <Select
             value={role}
-            label="Vai trò"
+            label="Bạn là...?"
             onChange={(e) => setRole(e.target.value)}
           >
-            <MenuItem value="LEARNER">Học viên (Learner)</MenuItem>
-            <MenuItem value="MENTOR">Gia sư (Mentor)</MenuItem>
+            <MenuItem value="LEARNER">Người học (Learner)</MenuItem>
+            <MenuItem value="MENTOR">Người hướng dẫn (Mentor)</MenuItem>
           </Select>
         </FormControl>
+
         <Button
           type="submit"
           variant="contained"
           fullWidth
+          disabled={loading}
           sx={{
-            py: 1.8,
-            background: "linear-gradient(90deg, #4361ee, #3f37c9)",
+            py: 1.5,
+            background: "linear-gradient(45deg, #4361ee 30%, #4cc9f0 90%)",
             fontWeight: 600,
-            fontSize: "1.1rem",
+            fontSize: "1rem",
+            textTransform: "none",
+            borderRadius: 2,
           }}
         >
-          Đăng ký
+          {loading ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : (
+            "Đăng ký ngay"
+          )}
         </Button>
       </form>
 
-      <Typography variant="body2" align="center" sx={{ mt: 4 }}>
-        Đã có tài khoản?{" "}
+      <Typography
+        variant="body2"
+        align="center"
+        sx={{ mt: 3, color: "text.secondary" }}
+      >
+        Bạn đã tham gia AESP?{" "}
         <Link
           href="/login"
-          underline="hover"
-          color="primary"
-          sx={{ fontWeight: 600 }}
+          underline="always"
+          sx={{ fontWeight: 700, color: "#4361ee", cursor: "pointer" }}
         >
-          Đăng nhập ngay
+          Đăng nhập
         </Link>
       </Typography>
     </Box>

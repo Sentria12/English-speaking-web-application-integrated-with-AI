@@ -1,33 +1,63 @@
 import React, { useState } from "react";
+import api from "../utils/api";
+import { useAuth } from "../context/AuthContext";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import api from "../utils/api"; // axios instance
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Alert from "@mui/material/Alert";
-import Link from "@mui/material/Link";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
       const res = await api.post("/auth/login", { email, password });
-      const token = res.data; // token từ backend
-      localStorage.setItem("token", token);
-      alert("Đăng nhập thành công!");
-      navigate("/dashboard"); // hoặc trang chính
-    } catch (err: any) {
-      setError(
-        err.response?.data || "Đăng nhập thất bại. Kiểm tra lại thông tin.",
+
+      const { token, role, hasCompletedAssessment, userId } = res.data;
+
+      if (!token) throw new Error("Server không trả về token hợp lệ.");
+
+      // 1. Lưu session
+      login(token);
+
+      if (userId) {
+        localStorage.setItem("userId", userId.toString());
+      }
+
+      localStorage.setItem(
+        "hasCompletedAssessment",
+        JSON.stringify(hasCompletedAssessment),
       );
+
+      // 2. Điều hướng dựa trên trạng thái
+      if (role === "LEARNER") {
+        if (hasCompletedAssessment) {
+          navigate("/dashboard", { replace: true });
+        } else {
+          navigate("/initial-assessment", { replace: true });
+        }
+      } else {
+        navigate("/dashboard", { replace: true });
+      }
+    } catch (err: any) {
+      setError(err.response?.data || "Đăng nhập thất bại.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,8 +97,7 @@ const Login = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          variant="outlined"
-          sx={{ mb: 2 }}
+          disabled={loading}
         />
         <TextField
           fullWidth
@@ -78,35 +107,27 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          variant="outlined"
+          disabled={loading}
           sx={{ mb: 3 }}
         />
         <Button
           type="submit"
           variant="contained"
           fullWidth
+          disabled={loading}
           sx={{
             py: 1.8,
             background: "linear-gradient(90deg, #4361ee, #3f37c9)",
             fontWeight: 600,
-            fontSize: "1.1rem",
           }}
         >
-          Đăng nhập
+          {loading ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : (
+            "Đăng nhập"
+          )}
         </Button>
       </form>
-
-      <Typography variant="body2" align="center" sx={{ mt: 4 }}>
-        Chưa có tài khoản?{" "}
-        <Link
-          href="/register"
-          underline="hover"
-          color="primary"
-          sx={{ fontWeight: 600 }}
-        >
-          Đăng ký ngay
-        </Link>
-      </Typography>
     </Box>
   );
 };
